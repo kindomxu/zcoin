@@ -165,11 +165,18 @@ public:
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x4381deb85b1b2c9843c222944b616d997516dcbd6a964e1eaf0def0830695233"));
         assert(genesis.hashMerkleRoot == uint256S("0x365d2aa75d061370c9aefdabac3985716b1e3b4bb7c4af4ed54f25e5aaa42783"));
+        vSeeds.push_back(CDNSSeedData("electrumx01.zcoin.io", "electrumx01.zcoin.io", false));
+        vSeeds.push_back(CDNSSeedData("electrumx02.zcoin.io", "electrumx02.zcoin.io", false));
         vSeeds.push_back(CDNSSeedData("sf1.zcoin.io", "sf1.zcoin.io", false));
         vSeeds.push_back(CDNSSeedData("sf2.zcoin.io", "sf2.zcoin.io", false));
         vSeeds.push_back(CDNSSeedData("london.zcoin.io", "london.zcoin.io", false));
         vSeeds.push_back(CDNSSeedData("singapore.zcoin.io", "singapore.zcoin.io", false));
         vSeeds.push_back(CDNSSeedData("nyc.zcoin.io", "nyc.zcoin.io", false));
+        vSeeds.push_back(CDNSSeedData("paris.zcoin.io", "paris.zcoin.io", false));
+        vSeeds.push_back(CDNSSeedData("netherlands.zcoin.io", "netherlands.zcoin.io", false));
+        vSeeds.push_back(CDNSSeedData("sydney.zcoin.io", "sydney.zcoin.io", false));
+        vSeeds.push_back(CDNSSeedData("tokyo.zcoin.io", "tokyo.zcoin.io", false));
+        vSeeds.push_back(CDNSSeedData("london.zcoin.io", "london.zcoin.io", false));
         // Note that of those with the service bits flag, most only support a subset of possible options
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 82);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);
