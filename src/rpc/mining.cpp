@@ -783,17 +783,17 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
     result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
 
-//    UniValue znodeObj(UniValue::VOBJ);
-//    if(pblock->txoutZnode != CTxOut()) {
-//        CTxDestination address1;
-//        ExtractDestination(pblock->txoutZnode.scriptPubKey, address1);
-//        CBitcoinAddress address2(address1);
-//        znodeObj.push_back(Pair("payee", address2.ToString().c_str()));
-//        znodeObj.push_back(Pair("script", HexStr(pblock->txoutZnode.scriptPubKey.begin(), pblock->txoutZnode.scriptPubKey.end())));
-//        znodeObj.push_back(Pair("amount", pblock->txoutZnode.nValue));
-//    }
-//    result.push_back(Pair("znode", znodeObj));
-//    result.push_back(Pair("znode_payments_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nZnodePaymentsStartBlock));
+    UniValue znodeObj(UniValue::VOBJ);
+    if(pblock->txoutZnode != CTxOut()) {
+        CTxDestination address1;
+        ExtractDestination(pblock->txoutZnode.scriptPubKey, address1);
+        CBitcoinAddress address2(address1);
+        znodeObj.push_back(Pair("payee", address2.ToString().c_str()));
+        znodeObj.push_back(Pair("script", HexStr(pblock->txoutZnode.scriptPubKey.begin(), pblock->txoutZnode.scriptPubKey.end())));
+        znodeObj.push_back(Pair("amount", pblock->txoutZnode.nValue));
+    }
+    result.push_back(Pair("znode", znodeObj));
+    result.push_back(Pair("znode_payments_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nZnodePaymentsStartBlock));
 //    result.push_back(Pair("znode_payments_enforced", sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
 
     const struct BIP9DeploymentInfo& segwit_info = VersionBitsDeploymentInfo[Consensus::DEPLOYMENT_SEGWIT];
