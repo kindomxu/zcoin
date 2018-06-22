@@ -40,6 +40,16 @@ double GetDifficultyHelper(unsigned int nBits) {
 unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHeader *pblock, const Consensus::Params &params) {
     bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
 
+// at the beginning
+if(!fTestNet && pblock->nTime > SWITCH_TO_MTP_BLOCK_HEADER){
+    return 0x2000ffff;
+}
+
+// following
+if(!fTestNet && pindexLast->nHeight + 1 > 89177){
+    return bnProofOfWorkLimit.GetCompact();
+}
+
     // Zcoin - MTP
 	//if(!fTestNet && pindexLast->nHeight + 1 >= HF_MTP_HEIGHT){
     /*if(!fTestNet && pblock->nTime > 1526971395){
