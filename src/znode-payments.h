@@ -16,8 +16,8 @@ class CZnodePayments;
 class CZnodePaymentVote;
 class CZnodeBlockPayees;
 
-static const int MNPAYMENTS_SIGNATURES_REQUIRED         = 6;
-static const int MNPAYMENTS_SIGNATURES_TOTAL            = 10;
+static const int MNPAYMENTS_SIGNATURES_REQUIRED         = 3;
+static const int MNPAYMENTS_SIGNATURES_TOTAL            = 3;
 
 //! minimum peer version that can receive and send znode payment messages,
 //  vote for znode and be elected as a payment winner
