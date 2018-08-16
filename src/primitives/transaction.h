@@ -222,6 +222,18 @@ public:
                 a.scriptPubKey == b.scriptPubKey);
     }
 
+    void SetEmpty()
+    {
+        nValue = 0;
+        scriptPubKey.clear();
+    }
+
+    bool IsEmpty() const
+    {
+        return (nValue == 0 && scriptPubKey.empty());
+    }
+
+
     friend bool operator!=(const CTxOut& a, const CTxOut& b)
     {
         return !(a == b);
@@ -450,6 +462,15 @@ public:
     unsigned int CalculateModifiedSize(unsigned int nTxSize=0) const;
 
     bool IsCoinBase() const;
+
+    // Themis
+    bool HasCreateOrCall() const;
+    bool HasOpSpend() const;
+    bool IsNormalTx() const
+    {
+        // not coin base or coin stake transaction
+        return !IsCoinBase() && !IsZerocoinSpend() && !IsZerocoinMint();
+    }
 
     bool IsZerocoinSpend() const;
 

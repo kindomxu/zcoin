@@ -11,6 +11,8 @@
 #include "uint256.h"
 #include "definition.h"
 
+// Themis
+static const int SER_WITHOUT_SIGNATURE = 1 << 3;
 
 unsigned char GetNfactor(int64_t nTimestamp);
 
@@ -37,6 +39,9 @@ public:
     uint32_t nTime;
     uint32_t nBits;
     uint32_t nNonce;
+    // Themis
+    uint256 hashStateRoot;
+    uint256 hashUTXORoot;
 
     static const int CURRENT_VERSION = 2;
 
@@ -59,6 +64,9 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
+        // Themis
+        READWRITE(hashStateRoot);
+        READWRITE(hashUTXORoot);
     }
 
     void SetNull()
@@ -71,6 +79,9 @@ public:
         nNonce = 0;
         isComputed = -1;
         powHash.SetNull();
+        // Themis
+        hashStateRoot.SetNull();
+        hashUTXORoot.SetNull();
     }
 
     int GetChainID() const
@@ -98,12 +109,34 @@ public:
 
     uint256 GetHash() const;
 
+    // Themis
+    uint256 GetHashWithoutSign() const;
+
     int64_t GetBlockTime() const
     {
         return (int64_t)nTime;
     }
 
     void InvalidateCachedPoWHash(int nHeight) const;
+
+    // Themis
+    CBlockHeader& operator=(const CBlockHeader& other)
+    {
+        if (this != &other)
+        {
+            this->nVersion       = other.nVersion;
+            this->hashPrevBlock  = other.hashPrevBlock;
+            this->hashMerkleRoot = other.hashMerkleRoot;
+            this->nTime          = other.nTime;
+            this->nBits          = other.nBits;
+            this->nNonce         = other.nNonce;
+            // Themis
+            this->hashStateRoot  = other.hashStateRoot;
+            this->hashUTXORoot   = other.hashUTXORoot;
+        }
+        return *this;
+    }
+
 };
 
 
@@ -167,6 +200,9 @@ public:
         block.nTime          = nTime;
         block.nBits          = nBits;
         block.nNonce         = nNonce;
+        block.hashStateRoot  = hashStateRoot;
+        block.hashUTXORoot   = hashUTXORoot;
+
         return block;
     }
 

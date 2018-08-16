@@ -18,8 +18,23 @@
 #include <boost/function.hpp>
 
 #include <univalue.h>
+// Themis
+#include <httpserver.h>
+#include <mutex>
+#include <condition_variable>
 
 static const unsigned int DEFAULT_RPC_SERIALIZE_VERSION = 1;
+
+// Themis
+struct CUpdatedBlock
+{
+    uint256 hash;
+    int height;
+};
+
+static std::mutex cs_blockchange;
+static std::condition_variable cond_blockchange;
+static CUpdatedBlock latestblock;
 
 class CRPCCommand;
 
@@ -50,8 +65,54 @@ public:
     std::string strMethod;
     UniValue params;
 
-    JSONRequest() { id = NullUniValue; }
+    // JSONRequest() { id = NullUniValue; }
+    // Themis
+    bool isLongPolling;
+
+    /**
+     * If using batch JSON request, this object won't get the underlying HTTPRequest.
+     */
+    JSONRPCRequest() {
+        id = NullUniValue;
+        params = NullUniValue;
+        fHelp = false;
+        req = NULL;
+        isLongPolling = false;
+    };
+
+    JSONRPCRequest(HTTPRequest *_req);
+
+    /**
+     * Start long-polling
+     */
+    void PollStart();
+
+    /**
+     * Ping long-poll connection with an empty character to make sure it's still alive.
+     */
+    void PollPing();
+
+    /**
+     * Returns whether the underlying long-poll connection is still alive.
+     */
+    bool PollAlive();
+
+    /**
+     * End a long poll request.
+     */
+    void PollCancel();
+
+    /**
+     * Return the JSON result of a long poll request
+     */
+    void PollReply(const UniValue& result);
+
     void parse(const UniValue& valRequest);
+
+    // Themis
+    // FIXME: make this private?
+    HTTPRequest *req;
+
 };
 
 /** Query whether RPC is running */
@@ -184,6 +245,8 @@ extern std::vector<unsigned char> ParseHexO(const UniValue& o, std::string strKe
 
 extern int64_t nWalletUnlockTime;
 extern CAmount AmountFromValue(const UniValue& value);
+// Themis
+extern double GetPoWMHashPS();
 extern UniValue ValueFromAmount(const CAmount& amount);
 extern double GetDifficulty(const CBlockIndex* blockindex = NULL);
 extern std::string HelpRequiringPassphrase();

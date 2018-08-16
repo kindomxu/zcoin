@@ -50,6 +50,12 @@ uint256 CBlockHeader::GetHash() const {
     return SerializeHash(*this);
 }
 
+// Themis
+uint256 CBlockHeader::GetHashWithoutSign() const
+{
+    return SerializeHash(*this, SER_GETHASH | SER_WITHOUT_SIGNATURE);
+}
+
 uint256 CBlockHeader::GetPoWHash(int nHeight, bool forceCalc) const {
 //    int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
 //            std::chrono::system_clock::now().time_since_epoch()).count();
@@ -102,12 +108,14 @@ void CBlockHeader::InvalidateCachedPoWHash(int nHeight) const {
 std::string CBlock::ToString() const {
     std::stringstream s;
     s << strprintf(
-            "CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
+            "CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, hashStateRoot=%s, hashUTXORoot=%s, vtx=%u)\n",
             GetHash().ToString(),
             nVersion,
             hashPrevBlock.ToString(),
             hashMerkleRoot.ToString(),
             nTime, nBits, nNonce,
+	        hashStateRoot.ToString(),
+	        hashUTXORoot.ToString(),
             vtx.size());
     for (unsigned int i = 0; i < vtx.size(); i++) {
         s << "  " << vtx[i].ToString() << "\n";
