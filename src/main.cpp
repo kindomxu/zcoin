@@ -2799,8 +2799,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     set<uint256> txIds;
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
 
-    if (block.zerocoinTxInfo == NULL)
-        block.zerocoinTxInfo = std::make_shared<CZerocoinTxInfo>();
+    block.zerocoinTxInfo = std::make_shared<CZerocoinTxInfo>();
 
     for (unsigned int i = 0; i < block.vtx.size(); i++) {
         const CTransaction &tx = block.vtx[i];
@@ -2879,7 +2878,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
             }
         }
 
-        if (tx.IsZerocoinSpend() || tx.IsZerocoinMint(tx)) {
+        if (tx.IsZerocoinSpend() || tx.IsZerocoinMint()) {
             // Check transaction against zerocoin state
             if (!CheckTransaction(tx, state, txHash, false, pindex->nHeight, false, true, block.zerocoinTxInfo.get()))
                 return state.DoS(100, error("stateful zerocoin check failed"),
